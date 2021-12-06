@@ -1,12 +1,8 @@
 package com.gikim.doldolseo_msa_member.utils;
 
-import com.gikim.doldolseo_msa_member.dto.MemberDTO;
 import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +15,7 @@ public class JwtTokenUtil {
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
     public String getIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(JWT_SECRET)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+        return getClaimFromToken(token, Claims::getId);
     }
 
 
@@ -48,10 +40,14 @@ public class JwtTokenUtil {
     }
 
     public String generateToken(String id) {
-        return generateToken(id, new HashMap<>());
+        return doGenerateToken(id, new HashMap<>());
     }
 
     public String generateToken(String id, Map<String, Object> claims) {
+        return doGenerateToken(id, claims);
+    }
+
+    public String doGenerateToken(String id, Map<String, Object> claims) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_MS);
 

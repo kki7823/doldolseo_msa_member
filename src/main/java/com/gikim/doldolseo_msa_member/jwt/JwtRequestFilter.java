@@ -1,7 +1,6 @@
 package com.gikim.doldolseo_msa_member.jwt;
 
-import com.gikim.doldolseo_msa_member.dto.MemberDTO;
-import com.gikim.doldolseo_msa_member.service.MemberService;
+import com.gikim.doldolseo_msa_member.service.MemberAuthService;
 import com.gikim.doldolseo_msa_member.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,19 +24,19 @@ import java.util.List;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
-    private MemberService service;
+    private MemberAuthService service;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     private static final List<String> EXCLUDE_URL =
-            Collections.unmodifiableList(Arrays.asList("/member", "member/auth"));
+            Collections.unmodifiableList(Arrays.asList("/member/login"));
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("JWT REQUEST FILTER");
         final String requestTokenHeader = request.getHeader("Authorization");
-
         String id = null;
         String jwtToken = null;
 
@@ -56,7 +54,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = service.getMemberWithAuthorities(id);
+            UserDetails userDetails = service.loadUserByUsername(id);
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken

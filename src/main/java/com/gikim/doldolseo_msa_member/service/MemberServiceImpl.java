@@ -26,10 +26,8 @@ import java.util.Set;
 public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberRepository repository;
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -56,33 +54,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDTO authenticateMember(String id, String password) {
-        Member member = repository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException(id));
-
-        if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다.");
-        }
-
-        return modelMapper.map(member, MemberDTO.class);
-    }
-
-    @Override
     public MemberDTO getMember(String id) throws UsernameNotFoundException {
-        return null;
-    }
-
-    @Override
-    public UserDetails getMemberWithAuthorities(String id) throws UsernameNotFoundException {
         Member member = repository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException(id));
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.USER.getVlaue()));
-
-        if (member.getIsCrleader()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.CREWLEADER.getVlaue()));
-        }
-        return new User(member.getId(), member.getPassword(), grantedAuthorities);
+        return modelMapper.map(member, MemberDTO.class);
     }
 
     @Override

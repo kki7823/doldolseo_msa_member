@@ -33,5 +33,5 @@ public class Member {
     @Column(name = "JOIN_DATE")
     private LocalDateTime joinDate;
 
-    private Boolean isCrleader;
+    private Boolean isCrewLeader;
 }
