@@ -11,7 +11,5 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, String> {
     Optional<Member> findById(String id);
     Optional<Member> findByNickname(String nickname);
-
-    @Transactional
     void deleteById(String id);
 }

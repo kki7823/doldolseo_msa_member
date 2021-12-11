@@ -3,24 +3,17 @@ package com.gikim.doldolseo_msa_member.service;
 import com.gikim.doldolseo_msa_member.dolmain.Member;
 import com.gikim.doldolseo_msa_member.dto.MemberDTO;
 import com.gikim.doldolseo_msa_member.repository.MemberRepository;
-import com.gikim.doldolseo_msa_member.jwt.MemberRole;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -37,6 +30,7 @@ public class MemberServiceImpl implements MemberService {
         String encodedPassword = passwordEncoder.encode(rawPassword);
         dto.setPassword(encodedPassword);
         dto.setJoinDate(LocalDateTime.now());
+        dto.setIsCrewLeader(false);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date birth = null;
@@ -61,12 +55,31 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDTO updateMember(MemberDTO dto) {
-        return null;
+    @Transactional
+    public void updateMember(String id, MemberDTO dto) {
+        System.out.println(dto.toString());
+        Member member = repository
+                .findById(id).orElseThrow(() -> new UsernameNotFoundException(id));
+
+        member.setMemberImg(dto.getMemberImg());
+        if (dto.getEmail() != null) {
+            member.setEmail(dto.getEmail());
+        }
+        member.setPhone(dto.getPhone());
+
+        if (dto.getPassword() != null) {
+            String rawPassword = dto.getPassword();
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+            member.setPassword(encodedPassword);
+        }
+
+        member.setGender(dto.getGender());
+        System.out.println("updateMember is done.");
     }
 
     @Override
-    public MemberDTO deleteMember(MemberDTO dto) {
-        return null;
+    public void deleteMember(String id) {
+        repository.deleteById(id);
+        System.out.println("member id "+id+" is deleted.");
     }
 }

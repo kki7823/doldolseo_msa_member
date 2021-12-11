@@ -29,7 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.5.6'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.6'
 //    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    runtimeOnly 'mysql:mysql-connector-java:8.0.25'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.27'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.6'
@@ -38,6 +38,7 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.22'
     implementation 'org.modelmapper:modelmapper:2.4.4'
+    implementation 'commons-io:commons-io:2.11.0'
 }
 
 dependencyManagement {
