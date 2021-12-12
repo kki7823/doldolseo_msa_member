@@ -11,8 +11,7 @@ COPY src src
 RUN chmod +x ./gradlew
 RUN ./gradlew bootJar
 ENV JAR_FILE_PATH=./build/libs
-WORKDIR $JAR_FILE_PATH
 RUN pwd > temp.txt
-COPY $JAR_FILE_PATH/*.jar app.jar
+COPY $JAR_FILE_PATH/*.jar $JAR_FILE_PATH/app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "build/libs/app.jar"]

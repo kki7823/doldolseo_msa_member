@@ -1,5 +1,4 @@
 package com.gikim.doldolseo_msa_member.controller;
-
 import com.gikim.doldolseo_msa_member.dto.MemberDTO;
 import com.gikim.doldolseo_msa_member.dto.MemberLoginRequest;
 import com.gikim.doldolseo_msa_member.service.MemberAuthService;
@@ -14,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -118,7 +116,6 @@ public class MemberController {
         InputStream in = new FileInputStream(imgPath);
         byte[] imageByteArr = IOUtils.toByteArray(in);
         in.close();
-
         return imageByteArr;
     }
 }
