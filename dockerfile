@@ -1,5 +1,5 @@
 FROM openjdk:8
-RUN sudo mkdir doldolseo
+RUN mkdir doldolseo
 WORKDIR ./doldolseo
 RUN apt-get update
 RUN apt-get install -y vim net-tools nmap iputils-ping
@@ -8,7 +8,7 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 COPY src src
-RUN sudo chmod +x ./gradlew
+RUN chmod +x ./gradlew
 RUN ./gradlew bootJar
 ENV JAR_FILE_PATH=./build/libs
 WORKDIR $JAR_FILE_PATH
