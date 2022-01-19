@@ -1,6 +1,6 @@
 package com.gikim.doldolseo_msa_member.service;
 
-import com.gikim.doldolseo_msa_member.dolmain.Member;
+import com.gikim.doldolseo_msa_member.domain.Member;
 import com.gikim.doldolseo_msa_member.dto.MemberDTO;
 import com.gikim.doldolseo_msa_member.jwt.MemberRole;
 import com.gikim.doldolseo_msa_member.repository.MemberRepository;
@@ -36,7 +36,7 @@ public class MemberAuthService implements UserDetailsService {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.USER.getVlaue()));
 
-        if (member.getIsCrewLeader()) {
+        if (member.getIsCrewLeader() == 'y') {
             grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.CREWLEADER.getVlaue()));
         }
         return new User(member.getId(), member.getPassword(), grantedAuthorities);

@@ -1,6 +1,6 @@
 package com.gikim.doldolseo_msa_member.service;
 
-import com.gikim.doldolseo_msa_member.dolmain.Member;
+import com.gikim.doldolseo_msa_member.domain.Member;
 import com.gikim.doldolseo_msa_member.dto.MemberDTO;
 import com.gikim.doldolseo_msa_member.repository.MemberRepository;
 import org.modelmapper.ModelMapper;
@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
         String encodedPassword = passwordEncoder.encode(rawPassword);
         dto.setPassword(encodedPassword);
         dto.setJoinDate(LocalDateTime.now());
-        dto.setIsCrewLeader(false);
+        dto.setMemberRole("USER");
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date birth = null;
@@ -80,6 +80,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMember(String id) {
         repository.deleteById(id);
-        System.out.println("member id "+id+" is deleted.");
+        System.out.println("member id " + id + " is deleted.");
     }
+
 }
