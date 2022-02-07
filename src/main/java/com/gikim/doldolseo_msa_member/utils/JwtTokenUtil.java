@@ -10,7 +10,8 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil {
-    private static final String JWT_SECRET = "doldolseo";
+    private static final String JWT_SECRET = "DOLDOLSEOTESTSECRET";
+    private static final String API_KEY = "DOLDOLSEOTESTAPIKEY";
     private static final int JWT_EXPIRATION_MS = 60480000;
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
@@ -51,13 +52,18 @@ public class JwtTokenUtil {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_MS);
 
-        return Jwts.builder()
+        claims.put("api-key",API_KEY);
+        String token = Jwts.builder()
                 .setClaims(claims)
                 .setId(id)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
+
+        System.out.println("token : "+token);
+
+        return token;
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

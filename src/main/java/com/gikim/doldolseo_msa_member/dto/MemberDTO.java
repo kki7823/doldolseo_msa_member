@@ -17,5 +17,5 @@ public class MemberDTO {
     private String email;
     private String phone;
     private LocalDateTime joinDate;
-    private Boolean isCrewLeader;
+    private String memberRole;
 }

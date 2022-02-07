@@ -1,4 +1,4 @@
-package com.gikim.doldolseo_msa_member.dolmain;
+package com.gikim.doldolseo_msa_member.domain;
 
 import lombok.*;
 
@@ -33,5 +33,6 @@ public class Member {
     @Column(name = "JOIN_DATE")
     private LocalDateTime joinDate;
 
-    private Boolean isCrewLeader;
+    @Column(name = "MEMBER_ROLE")
+    private String memberRole;
 }
