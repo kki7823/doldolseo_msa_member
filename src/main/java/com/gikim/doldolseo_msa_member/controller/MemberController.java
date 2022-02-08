@@ -7,15 +7,10 @@ import com.gikim.doldolseo_msa_member.service.MemberService;
 import com.gikim.doldolseo_msa_member.utils.JwtTokenUtil;
 import com.gikim.doldolseo_msa_member.utils.UploadProfileUtil;
 import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -56,11 +50,23 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
+    @PostMapping("/member/check")
+    public ResponseEntity<Boolean> check(@RequestParam(required = false) String id,
+                                         @RequestParam(required = false) String nickName) {
+        Boolean isExist = null;
+
+        if (id != null)
+            isExist = memberService.checkMemberId(id);
+        else if (nickName != null)
+            isExist = memberService.checkMemberNickName(nickName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(isExist);
+    }
+
     @PostMapping("/member/login")
     @ResponseBody
     public ResponseEntity<MemberDTO> loginMember(@RequestBody MemberLoginDTO loginDTO,
                                                  HttpServletResponse response) throws Exception {
-        System.out.println("MEMBER CONTROLLER");
         final MemberDTO memberDTO = memberAuthService.authenticateMember(loginDTO.getId(), loginDTO.getPassword());
         final String token = jwtTokenUtil.generateToken(memberDTO.getId());
 
@@ -83,7 +89,7 @@ public class MemberController {
     @PutMapping("/member/{id}")
     public ResponseEntity<MemberDTO> updateMember(MemberDTO dto,
                                                   @RequestParam(required = false) MultipartFile memberImgFile,
-                                                  @PathVariable String id) throws IOException, FileSizeLimitExceededException {
+                                                  @PathVariable String id) throws IOException {
         if (memberImgFile != null) {
             if (!memberImgFile.isEmpty()) {
                 String profileImg = uploadProfileUtil.uploadProfile(memberImgFile, dto);
@@ -107,13 +113,14 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @GetMapping(value = "/member/images/{imageFileName}",
-            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
+    @GetMapping(value = "/member/images/{imageFileName}"
+            ,produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
     public @ResponseBody
-    byte[] getMemberImages(@PathVariable String imageFileName,
-                           HttpServletRequest request) throws IOException {
+    byte[] getMemberImages(@PathVariable String imageFileName) throws IOException {
 
-        String imgPath = System.getProperty("user.dir") + "/src/main/resources/static/images/profile/" + imageFileName;
+        String imgPath = System.getProperty("user.dir")
+                + "/src/main/resources/static/images/profile/"
+                + imageFileName;
         InputStream in = new FileInputStream(imgPath);
         byte[] imageByteArr = IOUtils.toByteArray(in);
         in.close();

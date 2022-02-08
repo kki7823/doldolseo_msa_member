@@ -48,6 +48,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public boolean checkMemberId(String id) {
+        return repository.existsById(id);
+    }
+
+    @Override
+    public boolean checkMemberNickName(String nickName) {
+        return repository.existsByNickname(nickName);
+    }
+
+
+    @Override
     public MemberDTO getMember(String id) throws UsernameNotFoundException {
         Member member = repository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException(id));

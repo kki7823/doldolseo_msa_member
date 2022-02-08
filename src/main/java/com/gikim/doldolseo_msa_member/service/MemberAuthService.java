@@ -34,11 +34,12 @@ public class MemberAuthService implements UserDetailsService {
         Member member = repository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException(id));
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.USER.getVlaue()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.USER.getVlaue())); //
 
         if (member.getMemberRole().equals("CREWLEADER")) {
             grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.CREWLEADER.getVlaue()));
         }
+
         return new User(member.getId(), member.getPassword(), grantedAuthorities);
     }
 

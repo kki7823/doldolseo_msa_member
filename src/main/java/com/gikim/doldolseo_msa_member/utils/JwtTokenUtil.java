@@ -15,6 +15,11 @@ public class JwtTokenUtil {
     private static final int JWT_EXPIRATION_MS = 60480000;
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String id = getIdFromToken(token);
+        return (id.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
     public String getIdFromToken(String token) {
         return getClaimFromToken(token, Claims::getId);
     }
@@ -66,8 +71,5 @@ public class JwtTokenUtil {
         return token;
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String id = getIdFromToken(token);
-        return (id.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
+
 }
