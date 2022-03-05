@@ -2,11 +2,9 @@ package com.gikim.doldolseo_msa_member.configuration;
 
 import com.gikim.doldolseo_msa_member.jwt.JwtAuthenticationEntryPoint;
 import com.gikim.doldolseo_msa_member.jwt.JwtRequestFilter;
-import com.gikim.doldolseo_msa_member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,9 +13,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.Arrays;
 
-@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -28,15 +26,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity security) throws Exception {
-        System.out.println("SECURITU CONFIGURATION");
+        security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         security.cors()
                 .and()
                 .csrf().disable()
                 .authorizeRequests().antMatchers("/member").permitAll()
                 .and()
+                .authorizeRequests().antMatchers("/member/images/**").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/member/check").permitAll()
+                .and()
                 .authorizeRequests().antMatchers("/member/login").permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/member/images/**").permitAll()
+                .authorizeRequests().antMatchers("/member/refresh").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/member/role").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/member/**").hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
@@ -45,8 +52,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().disable()
                 .headers().frameOptions().disable();
-
-        security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

@@ -39,6 +39,7 @@ public class MemberAuthService implements UserDetailsService {
         if (member.getMemberRole().equals("CREWLEADER")) {
             grantedAuthorities.add(new SimpleGrantedAuthority(MemberRole.CREWLEADER.getVlaue()));
         }
+
         return new User(member.getId(), member.getPassword(), grantedAuthorities);
     }
 
