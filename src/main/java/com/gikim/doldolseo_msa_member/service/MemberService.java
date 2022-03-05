@@ -11,6 +11,10 @@ public interface MemberService {
 
     void updateMember(String id, MemberDTO dto);
 
+    void updateUserToCrewLeader(String id);
+
+    void updateCrewLeaderToUser(String id);
+
     boolean checkMemberId(String id);
 
     boolean checkMemberNickName(String nickName);

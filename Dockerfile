@@ -9,7 +9,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./gradlew bootJar
+RUN ./gradlew --stacktrace bootJar
 ENV JAR_FILE_PATH=./build/libs
 RUN pwd > temp.txt
 #COPY $JAR_FILE_PATH/*.jar $JAR_FILE_PATH/app.jar
