@@ -28,8 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity security) throws Exception {
         security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-//        security.cors()
-        security.csrf().disable()
+        security.cors()
+                .and()
+                .csrf().disable()
                 .authorizeRequests().antMatchers("/member").permitAll()
                 .and()
                 .authorizeRequests().antMatchers("/member/images/**").permitAll()
@@ -53,16 +54,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("*");
-//        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-//        configuration.setAllowCredentials(true);
-//        configuration.setMaxAge(3600L);
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*");
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE","OPTION"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type","Access-Control-Allow-Origin"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
