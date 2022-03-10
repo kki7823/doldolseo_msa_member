@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MemberController {
     @Autowired
     private MemberService memberService;
@@ -65,6 +64,7 @@ public class MemberController {
     public ResponseEntity<MemberDTO> loginMember(@RequestBody MemberLoginDTO loginDTO,
                                                  HttpServletResponse response) {
         final MemberDTO memberDTO = memberAuthService.authenticateMember(loginDTO.getId(), loginDTO.getPassword());
+
         final String token = jwtTokenUtil.generateToken(memberDTO.getId(), memberDTO.getMemberRole());
         jwtTokenUtil.setToken(response, token);
 
