@@ -29,8 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         security
-                .cors().configurationSource(corsConfigurationSource())
-                .and()
+//                .cors().configurationSource(corsConfigurationSource())
+//                .and()
                 .csrf().disable()
                 .authorizeRequests().antMatchers("/member").permitAll()
                 .and()
