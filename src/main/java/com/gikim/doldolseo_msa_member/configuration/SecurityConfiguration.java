@@ -61,6 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         configuration.addAllowedOrigin("*");
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE","OPTIONS"));
         configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("Set-Cookie");
 //        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

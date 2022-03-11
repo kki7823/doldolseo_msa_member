@@ -1,6 +1,7 @@
 package com.gikim.doldolseo_msa_member.utils;
 
 import io.jsonwebtoken.*;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -76,12 +77,19 @@ public class JwtTokenUtil {
     }
 
     public void setToken(HttpServletResponse response, String token) {
-        Cookie jwtCookie = new Cookie("token", token);
-        jwtCookie.setMaxAge(7 * 24 * 60 * 60);
+//        Cookie jwtCookie = new Cookie("token", token);
+//        jwtCookie.setMaxAge(7 * 24 * 60 * 60);
 //        jwtCookie.setSecure(true);
 //        jwtCookie.setHttpOnly(true);
-        jwtCookie.setPath("/");
-        response.addCookie(jwtCookie);
+//        jwtCookie.setPath("/");
+
+        ResponseCookie jwtCookie = ResponseCookie.from("token", token)
+                .maxAge(7 * 24 * 60 * 60)
+                .path("/")
+                .sameSite("None")
+                .build();
+
+        response.addHeader("Set-Cookie", jwtCookie.toString());
     }
 
 
