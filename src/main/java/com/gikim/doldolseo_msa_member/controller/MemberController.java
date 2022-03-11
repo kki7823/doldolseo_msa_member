@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -132,15 +133,13 @@ public class MemberController {
     @PutMapping(value = "/member/role")
     public void updateRole(@RequestParam String id,
                            @RequestParam String action) {
-        if (action.equals("PROMOTION")){
+        if (action.equals("PROMOTION")) {
             memberService.updateUserToCrewLeader(id);
-            System.out.println("[updateRole] "+id+"의 권한이 CREWLEADER로 변경 되었습니다.");
-        }
-        else if (action.equals("DEMOTION")){
+            System.out.println("[updateRole] " + id + "의 권한이 CREWLEADER로 변경 되었습니다.");
+        } else if (action.equals("DEMOTION")) {
             memberService.updateCrewLeaderToUser(id);
-            System.out.println("[updateRole] "+id+"의 권한이 USER로 변경 되었습니다.");
-        }
-        else
+            System.out.println("[updateRole] " + id + "의 권한이 USER로 변경 되었습니다.");
+        } else
             System.out.println("[updateRole] 잘못된 접근 입니다.");
     }
 
