@@ -77,16 +77,11 @@ public class JwtTokenUtil {
     }
 
     public void setToken(HttpServletResponse response, String token) {
-//        Cookie jwtCookie = new Cookie("token", token);
-//        jwtCookie.setMaxAge(7 * 24 * 60 * 60);
-//        jwtCookie.setSecure(true);
-//        jwtCookie.setHttpOnly(true);
-//        jwtCookie.setPath("/");
-
         ResponseCookie jwtCookie = ResponseCookie.from("token", token)
                 .maxAge(7 * 24 * 60 * 60)
                 .path("/")
                 .sameSite("None")
+                .secure(true)
                 .build();
 
         response.addHeader("Set-Cookie", jwtCookie.toString());
