@@ -64,6 +64,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public String getMemberNickname(String id) throws UsernameNotFoundException {
+        return (String) repository.findNickNameById(id)
+                .orElseThrow(() -> new UsernameNotFoundException(id));
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateMember(String id, MemberDTO dto) {
         System.out.println(dto.toString());

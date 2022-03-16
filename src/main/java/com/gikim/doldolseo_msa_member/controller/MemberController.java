@@ -129,6 +129,12 @@ public class MemberController {
         }
     }
 
+    @GetMapping(value = "/member/nickname/{id}")
+    @ResponseBody
+    public String getMemberNickname(@PathVariable String id) {
+        return memberService.getMemberNickname(id);
+    }
+
     @PutMapping(value = "/member/role")
     public void updateRole(@RequestParam String id,
                            @RequestParam String action) {
