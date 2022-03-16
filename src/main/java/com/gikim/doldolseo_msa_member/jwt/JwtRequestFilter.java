@@ -35,6 +35,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     "/member",
                     "/member/login",
                     "/member/images/**",
+                    "/member/nickname/**",
                     "/member/check"));
 
     @Override
