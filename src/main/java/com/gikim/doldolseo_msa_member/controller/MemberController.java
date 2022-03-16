@@ -79,7 +79,7 @@ public class MemberController {
 
     @GetMapping("/member/nickname/{id}")
     public ResponseEntity<String> getNickName(@PathVariable String id) {
-        String nickname = memberService.getMember(id).getNickname();
+        String nickname = memberService.getMemberNickname(id);
         return ResponseEntity.status(HttpStatus.OK).body(nickname);
     }
 
@@ -127,12 +127,6 @@ public class MemberController {
             System.out.println("파일이 없습니다 " + e.getMessage());
             return null;
         }
-    }
-
-    @GetMapping(value = "/member/nickname/{id}")
-    @ResponseBody
-    public String getMemberNickname(@PathVariable String id) {
-        return memberService.getMemberNickname(id);
     }
 
     @PutMapping(value = "/member/role")
