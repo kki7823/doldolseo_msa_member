@@ -3,6 +3,7 @@ package com.gikim.doldolseo_msa_member.service;
 import com.gikim.doldolseo_msa_member.domain.Member;
 import com.gikim.doldolseo_msa_member.dto.MemberDTO;
 import com.gikim.doldolseo_msa_member.repository.MemberRepository;
+import com.gikim.doldolseo_msa_member.utils.RedisUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +23,8 @@ public class MemberServiceImpl implements MemberService {
     private ModelMapper modelMapper;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public MemberDTO registMember(MemberDTO dto) {
@@ -65,8 +68,15 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public String getMemberNickname(String id) throws UsernameNotFoundException {
-        return (String) repository.findNickNameById(id)
-                .orElseThrow(() -> new UsernameNotFoundException(id));
+        if (redisUtil.isExist(id)){
+            return redisUtil.get(id);
+        }
+        else {
+            String nickName = (String) repository.findNickNameById(id)
+                    .orElseThrow(() -> new UsernameNotFoundException(id));
+            redisUtil.put(id, nickName, 60L);
+            return nickName;
+        }
     }
 
     @Override
@@ -97,7 +107,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public void updateUserToCrewLeader(String id){
+    public void updateUserToCrewLeader(String id) {
         Member member = repository
                 .findById(id).orElseThrow(() -> new UsernameNotFoundException(id));
         member.setMemberRole("CREWLEADER");
@@ -105,7 +115,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public void updateCrewLeaderToUser(String id){
+    public void updateCrewLeaderToUser(String id) {
         Member member = repository
                 .findById(id).orElseThrow(() -> new UsernameNotFoundException(id));
         member.setMemberRole("USER");
